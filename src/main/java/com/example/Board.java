@@ -1,3 +1,5 @@
+//Jonah Banks
+//This class stores the board constructor and instance variables
 package com.example;
 
 import java.awt.Color;
@@ -23,18 +25,8 @@ import javax.swing.*;
 public class Board extends JPanel implements MouseListener, MouseMotionListener {
     // Resource location constants for piece images
     public static final String PICTURE_PATH = "/src/main/java/com/example/Pictures/";
-    private static final String RESOURCES_WBISHOP_PNG = PICTURE_PATH + "wbishop.png";
-    private static final String RESOURCES_BBISHOP_PNG = PICTURE_PATH + "bbishop.png";
-    private static final String RESOURCES_WKNIGHT_PNG = PICTURE_PATH + "wknight.png";
-    private static final String RESOURCES_BKNIGHT_PNG = PICTURE_PATH + "bknight.png";
-    private static final String RESOURCES_WROOK_PNG = PICTURE_PATH + "wrook.png";
-    private static final String RESOURCES_BROOK_PNG = PICTURE_PATH + "brook.png";
-    private static final String RESOURCES_WKING_PNG = PICTURE_PATH + "wking.png";
-    private static final String RESOURCES_BKING_PNG = PICTURE_PATH + "bking.png";
-    private static final String RESOURCES_BQUEEN_PNG = PICTURE_PATH + "bqueen.png";
-    private static final String RESOURCES_WQUEEN_PNG = PICTURE_PATH + "wqueen.png";
-    private static final String RESOURCES_WPAWN_PNG = PICTURE_PATH + "wpawn.png";
-    private static final String RESOURCES_BPAWN_PNG = PICTURE_PATH + "bpawn.png";
+    private static final String RESOURCES_WBISHOP_PNG = PICTURE_PATH+"wbishop.png";
+    private static final String RESOURCES_BBISHOP_PNG = PICTURE_PATH+"bbishop.png";
 
     //constant used to keep track of where the piece should be drawn when the user is dragging it
     private static final int PIECE_OFFSET = 24;
@@ -103,8 +95,10 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     // it's up to you how you wish to arrange your pieces.
     void initializePieces() {
 
-        board[0][0].put(new Piece(true, RESOURCES_WKING_PNG));
-
+        board[0][2].put(new Piece(true,RESOURCES_WBISHOP_PNG));
+        board[0][5].put(new Piece(true, RESOURCES_WBISHOP_PNG));
+        board[7][2].put(new Piece(false,RESOURCES_BBISHOP_PNG));
+        board[7][5].put(new Piece(false,RESOURCES_BBISHOP_PNG));
     }
 
     public Square[][] getSquareArray() {
@@ -150,6 +144,10 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         if (sq.isOccupied() && sq.getOccupyingPiece().getColor() == whiteTurn) {
             currPiece = sq.getOccupyingPiece();
             fromMoveSquare = sq;
+            ArrayList<Square> l=currPiece.getControlledSquares(board, fromMoveSquare);
+            for(int i=0; i<l.size();i++){
+                l.get(i).setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.BLUE));
+            }
             sq.setDisplay(false);
         }
         repaint();
@@ -162,10 +160,22 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     @Override
     public void mouseReleased(MouseEvent e) {
         endSquare = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
-
-        // using currPiece
+        for(Square[] row: board){
+            for(Square s:row){
+                s.setBorder(null);
+            }
+        }
         if(fromMoveSquare!= null){
-            fromMoveSquare.setDisplay(true);
+            if(currPiece!=null&&currPiece.getLegalMoves(this, fromMoveSquare).contains(endSquare)){
+                fromMoveSquare.setDisplay(false);
+                endSquare.put(currPiece);
+                endSquare.setDisplay(true);
+                fromMoveSquare.removePiece();
+                whiteTurn=!whiteTurn;
+            }else{
+                fromMoveSquare.setDisplay(true);
+                fromMoveSquare.put(currPiece);
+            }
         }
         currPiece = null;
         repaint();
