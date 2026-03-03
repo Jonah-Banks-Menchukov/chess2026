@@ -51,6 +51,8 @@ public class Piece {
     // TO BE IMPLEMENTED!
     //return a list of every square that is "controlled" by this piece. A square is controlled
     //if the piece capture into it legally.
+    //Precondition: board[][] and start are not null
+    //Postcondition: returns an arraylist of squares the piece can move into 
     public ArrayList<Square> getControlledSquares(Square[][] board, Square start) {
     	ArrayList<Square> legals=new ArrayList<>();
         int currRow=start.getRow();
