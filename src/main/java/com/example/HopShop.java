@@ -11,40 +11,27 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 //you will need to implement two functions in this file.
-public class Piece {
-    private final boolean color;
-    private BufferedImage img;
-    
-    public Piece(boolean isWhite, String img_file) {
-        this.color = isWhite;
-         
-        try {
-            if (this.img == null) {
-                this.img = ImageIO.read(new File(System.getProperty("user.dir")+img_file));
-            }
-          } catch (IOException e) {
-            System.out.println("File not found: " + e.getMessage());
-          }
+public class HopShop extends Piece {
+    public HopShop(boolean color,String img_file) {
+        super(color, img_file);
     }
     
     
 
     
     public boolean getColor() {
-        return color;
+        return super.getColor();
     }
     
     public Image getImage() {
-        return img;
+        return super.getImage();
     }
     
     //precondition: g and currentSquare must be on-null valid objects.
     //postcondition: the image stored in the img property of this object is drawn to the screen.
+    @Override
     public void draw(Graphics g, Square currentSquare) {
-        int x = currentSquare.getX();
-        int y = currentSquare.getY();
-        
-        g.drawImage(this.img, x, y, null);
+        super.draw(g,currentSquare);
     }
     
     
@@ -53,6 +40,7 @@ public class Piece {
     //if the piece capture into it legally.
     //Precondition: board[][] and start are not null
     //Postcondition: returns an arraylist of squares the piece can move into 
+    @Override
     public ArrayList<Square> getControlledSquares(Square[][] board, Square start) {
     	ArrayList<Square> legals=new ArrayList<>();
         int currRow=start.getRow();
@@ -82,7 +70,7 @@ public class Piece {
             col++;
         }
         for(int i=0;i<legals.size();i++){
-            if(legals.get(i).isOccupied()&&legals.get(i).getOccupyingPiece().getColor()==color){
+            if(legals.get(i).isOccupied()&&legals.get(i).getOccupyingPiece().getColor()==super.getColor()){
                 legals.remove(i);
                 i--;
             }
@@ -99,8 +87,17 @@ public class Piece {
     //going to score any points.
     //Precondition: called from a piece object; b and start are not null.
     //Postcondition: returns an array con
+    @Override
+    public String toString(){
+        if(super.getColor()){
+            return "white HopShop";
+        }else{
+            return "black HopShop";
+        }
+    }
+    @Override
     public ArrayList<Square> getLegalMoves(Board b, Square start){
-    	ArrayList<Square> legals=new ArrayList<>();
+        ArrayList<Square> legals=new ArrayList<>();
         Square[][]  squares=b.getSquareArray();
         int currRow=start.getRow();
         int currCol=start.getCol();
@@ -130,7 +127,7 @@ public class Piece {
         }
         //Remove any squares where piece is same color
         for(int i=0;i<legals.size();i++){
-            if(legals.get(i).isOccupied()&&legals.get(i).getOccupyingPiece().getColor()==color){
+            if(legals.get(i).isOccupied()&&legals.get(i).getOccupyingPiece().getColor()==super.getColor()){
                 legals.remove(i);
                 i--;
             }
