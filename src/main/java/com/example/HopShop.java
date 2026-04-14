@@ -1,5 +1,6 @@
 //Jonah Banks
 //This stores the constructor for my piece, the jumping bishop
+//This 
 package com.example;
 import java.awt.Graphics;
 import java.awt.Image;
