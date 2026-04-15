@@ -1,6 +1,6 @@
 //Jonah Banks
 //This stores the constructor for my piece, the jumping bishop
-//This 
+//This piece can move diagonally up/down, left/right like a regular bishop, but it can also jump over as many pieces of any color as necessary
 package com.example;
 import java.awt.Graphics;
 import java.awt.Image;
