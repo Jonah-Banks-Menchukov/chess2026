@@ -20,20 +20,8 @@ public class HopShop extends Piece {
     
 
     
-    public boolean getColor() {
-        return super.getColor();
-    }
-    
-    public Image getImage() {
-        return super.getImage();
-    }
-    
     //precondition: g and currentSquare must be on-null valid objects.
     //postcondition: the image stored in the img property of this object is drawn to the screen.
-    @Override
-    public void draw(Graphics g, Square currentSquare) {
-        super.draw(g,currentSquare);
-    }
     
     
     // TO BE IMPLEMENTED!

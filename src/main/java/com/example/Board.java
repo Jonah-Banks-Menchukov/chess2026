@@ -27,6 +27,8 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     public static final String PICTURE_PATH = "/src/main/java/com/example/Pictures/";
     private static final String RESOURCES_WBISHOP_PNG = PICTURE_PATH+"wbishop.png";
     private static final String RESOURCES_BBISHOP_PNG = PICTURE_PATH+"bbishop.png";
+    private static final String RESOURCES_WKING_PNG=PICTURE_PATH+"wking.png";
+    private static final String RESOURCES_BKING_PNG=PICTURE_PATH+"bking.png";
 
     //constant used to keep track of where the piece should be drawn when the user is dragging it
     private static final int PIECE_OFFSET = 24;
@@ -37,6 +39,8 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
 
     // contains true if it's white's turn.
     private boolean whiteTurn;
+    private ArrayList<Square> blackOccupiedSquares;
+    private ArrayList<Square> whiteOccupiedSquares;
 
     // if the player is currently dragging a piece this variable contains it.
     Piece currPiece;
@@ -87,18 +91,39 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         whiteTurn = true;
 
     }
-
+    //precondition - the board is initialized and contains a king of either color. The boolean kingColor corresponds to the color of the king we wish to know the status of.
+    //postcondition - returns true of the king is in check and false otherwise.
+	public boolean isInCheck(boolean kingColor){
+        if(kingColor){
+            for(Square s:blackOccupiedSquares){
+                ArrayList<Square> controlledSqs=s.getOccupyingPiece().getControlledSquares(board, s);
+                for(Square c:controlledSqs){
+                    if(c.getOccupyingPiece()!=null&&c.getOccupyingPiece().getColor()!=kingColor&&c.getOccupyingPiece().instanceOf(King)){
+                        return true;
+                    }
+                }
+            }
+        }
+    }
     // set up the board such that the black pieces are on one side and the white
     // pieces are on the other.
     // since we only have one kind of piece for now you need only set the same
     // number of pieces on either side.
     // it's up to you how you wish to arrange your pieces.
-    void initializePieces() {
+    public void initializePieces() {
 
-        board[0][2].put(new Piece(true,RESOURCES_WBISHOP_PNG));
-        board[0][5].put(new Piece(true, RESOURCES_WBISHOP_PNG));
-        board[7][2].put(new Piece(false,RESOURCES_BBISHOP_PNG));
-        board[7][5].put(new Piece(false,RESOURCES_BBISHOP_PNG));
+        board[0][2].put(new HopShop(true,RESOURCES_WBISHOP_PNG));
+        board[0][5].put(new HopShop(true, RESOURCES_WBISHOP_PNG));
+        board[0][3].put(new King(true,RESOURCES_WBISHOP_PNG));
+        whiteOccupiedSquares.add(board[0][2]);
+        whiteOccupiedSquares.add(board[0][5]);
+        whiteOccupiedSquares.add(board[0][3]);
+        board[7][2].put(new HopShop(false,RESOURCES_BBISHOP_PNG));
+        board[7][5].put(new HopShop(false,RESOURCES_BBISHOP_PNG));
+        board[0][3].put(new King(false,RESOURCES_BKING_PNG));
+        blackOccupiedSquares.add(board[7][2]);
+        blackOccupiedSquares.add(board[7][5]);
+        blackOccupiedSquares.add(board[7][3]);
     }
 
     public Square[][] getSquareArray() {
