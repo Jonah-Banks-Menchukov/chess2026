@@ -98,12 +98,22 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
             for(Square s:blackOccupiedSquares){
                 ArrayList<Square> controlledSqs=s.getOccupyingPiece().getControlledSquares(board, s);
                 for(Square c:controlledSqs){
-                    if(c.getOccupyingPiece()!=null&&c.getOccupyingPiece().getColor()!=kingColor&&c.getOccupyingPiece().instanceOf(King)){
+                    if(c.getOccupyingPiece()!=null&&c.getOccupyingPiece().getColor()!=kingColor&&c.getOccupyingPiece() instanceof King){
+                        return true;
+                    }
+                }
+            }
+        }else{
+            for(Square s:whiteOccupiedSquares){
+                ArrayList<Square> controlledSqs=s.getOccupyingPiece().getControlledSquares(board, s);
+                for(Square c:controlledSqs){
+                    if(c.getOccupyingPiece()!=null&&c.getOccupyingPiece().getColor()!=kingColor&&c.getOccupyingPiece() instanceof King){
                         return true;
                     }
                 }
             }
         }
+        return false;
     }
     // set up the board such that the black pieces are on one side and the white
     // pieces are on the other.
@@ -201,6 +211,35 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
                 endSquare.setDisplay(true);
                 fromMoveSquare.removePiece();
                 whiteTurn=!whiteTurn;
+                if(currPiece.getColor()){
+                    for(int i=0; i<whiteOccupiedSquares.size();i++){
+                        if(whiteOccupiedSquares.get(i).equals(fromMoveSquare)){
+                            whiteOccupiedSquares.remove(i);
+                        }
+                    }
+                    if(endSquare.getOccupyingPiece()!=null){
+                        for(int i=0;i<blackOccupiedSquares.size();i++){
+                            if(blackOccupiedSquares.get(i).equals(endSquare)){
+                                blackOccupiedSquares.remove(i);
+                            }
+                        }
+                    }
+                    whiteOccupiedSquares.add(endSquare);
+                } else{
+                    for(int i=0; i<blackOccupiedSquares.size();i++){
+                        if(blackOccupiedSquares.get(i).equals(fromMoveSquare)){
+                            blackOccupiedSquares.remove(i);
+                        }
+                    }
+                    if(endSquare.getOccupyingPiece()!=null){
+                        for(int i=0;i<whiteOccupiedSquares.size();i++){
+                            if(whiteOccupiedSquares.get(i).equals(endSquare)){
+                                whiteOccupiedSquares.remove(i);
+                            }
+                        }
+                    }
+                    blackOccupiedSquares.add(endSquare); 
+                }
             }else{
                 fromMoveSquare.setDisplay(true);
                 fromMoveSquare.put(currPiece);

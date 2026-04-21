@@ -78,11 +78,7 @@ public class HopShop extends Piece {
     //Postcondition: returns an array con
     @Override
     public String toString(){
-        if(super.getColor()){
-            return "white HopShop";
-        }else{
-            return "black HopShop";
-        }
+        return super.toString()+" Hopshop";
     }
     @Override
     public ArrayList<Square> getLegalMoves(Board b, Square start){
