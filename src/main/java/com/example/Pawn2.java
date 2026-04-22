@@ -43,7 +43,7 @@ public class Pawn2 extends Piece {
         int row = start.getRow();
         int col = start.getCol();
 
-        if (color) { // White Logic
+        if (this.getColor()) { // White Logic
             // Controls ONLY the diagonal "jump" squares (row + 2, col +/- 2)
             if (row + 2 < 8) {
                 if (col - 2 >= 0) controlled.add(board[row + 2][col - 2]);
@@ -73,7 +73,7 @@ public class Pawn2 extends Piece {
     // returned.
     public ArrayList<Square> getLegalMoves(Board b, Square start) {
         ArrayList<Square> moves = new ArrayList<>();
-        if (color == true) {
+        if (this.getColor() == true) {
             if (start.getRow() < 7) {
 
                 Square up = b.getSquareArray()[start.getRow() + 1][start.getCol()];
@@ -82,7 +82,7 @@ public class Pawn2 extends Piece {
                 // check diagonal left
                 if (start.getCol()-2 >= 0 && start.getRow()+2<8 && b.getSquareArray()[start.getRow() + 2][start.getCol() - 2].isOccupied()
                         && b.getSquareArray()[start.getRow() + 2][start.getCol() - 2].getOccupyingPiece()
-                                .getColor() != color) {
+                                .getColor() != this.getColor()) {
                     Square downLeft = b.getSquareArray()[start.getRow() + 2][start.getCol() - 2];
                     moves.add(downLeft);
                 }
@@ -90,7 +90,7 @@ public class Pawn2 extends Piece {
 
                 if (start.getCol()+2<8 && start.getRow()+2 <8 && b.getSquareArray()[start.getRow() + 2][start.getCol() + 2].isOccupied()
                         && b.getSquareArray()[start.getRow() + 2][start.getCol() + 2].getOccupyingPiece()
-                                .getColor() != color) {
+                                .getColor() != this.getColor()) {
                     Square downRight = b.getSquareArray()[start.getRow() + 2][start.getCol() + 2];
                     moves.add(downRight);
                 }
@@ -106,7 +106,7 @@ public class Pawn2 extends Piece {
                 // check diagonal left (moving DOWN and LEFT)
                 if (start.getCol() - 2 >= 0 && start.getRow() - 2 >= 0) {
                     Square diagLeft = b.getSquareArray()[start.getRow() - 2][start.getCol() - 2];
-                    if (diagLeft.isOccupied() && diagLeft.getOccupyingPiece().getColor() != color) {
+                    if (diagLeft.isOccupied() && diagLeft.getOccupyingPiece().getColor() != this.getColor()) {
                         moves.add(diagLeft);
                     }
                 }
@@ -114,7 +114,7 @@ public class Pawn2 extends Piece {
                 // check diagonal right (moving DOWN and RIGHT)
                 if (start.getCol() + 2 < 8 && start.getRow() - 2 >= 0) {
                     Square diagRight = b.getSquareArray()[start.getRow() - 2][start.getCol() + 2];
-                    if (diagRight.isOccupied() && diagRight.getOccupyingPiece().getColor() != color) {
+                    if (diagRight.isOccupied() && diagRight.getOccupyingPiece().getColor() != this.getColor()) {
                         moves.add(diagRight);
                     }
                 }

@@ -17,7 +17,7 @@ public class CoolQueen extends Piece {
    
 
     private int pieceTaken;
-    public MyCoolQueen(boolean isWhite, String img_file){
+    public CoolQueen(boolean isWhite, String img_file){
         super(isWhite, img_file); 
     }
 
@@ -123,10 +123,7 @@ public class CoolQueen extends Piece {
     }
     
     public String toString(){
-        if (color)
-            return "White Cool Queen";
-        else
-            return "Black Cool Queen";
+        return super.toString()+" Cool Queen";
     }
 
     //TO BE IMPLEMENTED!
@@ -147,7 +144,7 @@ public class CoolQueen extends Piece {
             Square rights = b.getSquareArray()[start.getRow()][start.getCol()+i];
             if (rights.isOccupied())
             {
-                if (this.color != rights.getOccupyingPiece().getColor())
+                if (this.getColor() != rights.getOccupyingPiece().getColor())
                 {
                     moves.add(rights);
                 }
@@ -166,7 +163,7 @@ public class CoolQueen extends Piece {
             Square left = b.getSquareArray()[start.getRow()][start.getCol()-i];
             if (left.isOccupied())
             {
-                if (this.color != left.getOccupyingPiece().getColor())
+                if (this.getColor() != left.getOccupyingPiece().getColor())
                 {
                     moves.add(left);
                 }
@@ -184,7 +181,7 @@ public class CoolQueen extends Piece {
             Square down = b.getSquareArray()[start.getRow()+i][start.getCol()];
             if (down.isOccupied())
             {
-                if (this.color != down.getOccupyingPiece().getColor())
+                if (this.getColor() != down.getOccupyingPiece().getColor())
                 {
                     moves.add(down);
                 }
@@ -202,7 +199,7 @@ public class CoolQueen extends Piece {
             Square up = b.getSquareArray()[start.getRow()-i][start.getCol()];
             if (up.isOccupied())
             {
-                if (this.color != up.getOccupyingPiece().getColor())
+                if (this.getColor() != up.getOccupyingPiece().getColor())
                 {
                     moves.add(up);
                 }
@@ -220,7 +217,7 @@ public class CoolQueen extends Piece {
             Square upright = b.getSquareArray()[start.getRow()-i][start.getCol()+i];
             if (upright.isOccupied())
             {
-                if (this.color != upright.getOccupyingPiece().getColor())
+                if (this.getColor() != upright.getOccupyingPiece().getColor())
                 {
                     moves.add(upright);
                 }
@@ -238,7 +235,7 @@ public class CoolQueen extends Piece {
             Square upleft = b.getSquareArray()[start.getRow()-i][start.getCol()-i];
             if (upleft.isOccupied())
             {
-                if (this.color != upleft.getOccupyingPiece().getColor())
+                if (this.getColor() != upleft.getOccupyingPiece().getColor())
                 {
                     moves.add(upleft);
                 }
@@ -256,7 +253,7 @@ public class CoolQueen extends Piece {
             Square downleft = b.getSquareArray()[start.getRow()+i][start.getCol()-i];
             if (downleft.isOccupied())
             {
-                if (this.color != downleft.getOccupyingPiece().getColor())
+                if (this.getColor() != downleft.getOccupyingPiece().getColor())
                 {
                     moves.add(downleft);
                 }
@@ -274,7 +271,7 @@ public class CoolQueen extends Piece {
             Square downright = b.getSquareArray()[start.getRow()+i][start.getCol()+i];
             if (downright.isOccupied())
             {
-                if (this.color != downright.getOccupyingPiece().getColor())
+                if (this.getColor() != downright.getOccupyingPiece().getColor())
                 {
                     moves.add(downright);
                 }

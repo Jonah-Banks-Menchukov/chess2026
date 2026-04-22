@@ -25,10 +25,18 @@ import javax.swing.*;
 public class Board extends JPanel implements MouseListener, MouseMotionListener {
     // Resource location constants for piece images
     public static final String PICTURE_PATH = "/src/main/java/com/example/Pictures/";
-    private static final String RESOURCES_WBISHOP_PNG = PICTURE_PATH+"wbishop.png";
-    private static final String RESOURCES_BBISHOP_PNG = PICTURE_PATH+"bbishop.png";
-    private static final String RESOURCES_WKING_PNG=PICTURE_PATH+"wking.png";
-    private static final String RESOURCES_BKING_PNG=PICTURE_PATH+"bking.png";
+    private static final String RESOURCES_WBISHOP_PNG = PICTURE_PATH + "wbishop.png";
+    private static final String RESOURCES_BBISHOP_PNG = PICTURE_PATH + "bbishop.png";
+    private static final String RESOURCES_WKNIGHT_PNG = PICTURE_PATH + "wknight.png";
+    private static final String RESOURCES_BKNIGHT_PNG = PICTURE_PATH + "bknight.png";
+    private static final String RESOURCES_WROOK_PNG = PICTURE_PATH + "wrook.png";
+    private static final String RESOURCES_BROOK_PNG = PICTURE_PATH + "brook.png";
+    private static final String RESOURCES_WKING_PNG = PICTURE_PATH + "wking.png";
+    private static final String RESOURCES_BKING_PNG = PICTURE_PATH + "bking.png";
+    private static final String RESOURCES_BQUEEN_PNG = PICTURE_PATH + "bqueen.png";
+    private static final String RESOURCES_WQUEEN_PNG = PICTURE_PATH + "wqueen.png";
+    private static final String RESOURCES_WPAWN_PNG = PICTURE_PATH + "wpawn.png";
+    private static final String RESOURCES_BPAWN_PNG = PICTURE_PATH + "bpawn.png";
 
     //constant used to keep track of where the piece should be drawn when the user is dragging it
     private static final int PIECE_OFFSET = 24;
@@ -122,18 +130,32 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     // it's up to you how you wish to arrange your pieces.
     public void initializePieces() {
 
+        board[0][0].put(new AprenticeRook(true, RESOURCES_WROOK_PNG));
+        board[0][1].put(new Telekenis(true, RESOURCES_WKNIGHT_PNG));
         board[0][2].put(new HopShop(true,RESOURCES_WBISHOP_PNG));
+        board[0][3].put(new King(true,RESOURCES_WKING_PNG));
+        board[0][4].put(new CoolQueen(true, RESOURCES_WQUEEN_PNG));
         board[0][5].put(new HopShop(true, RESOURCES_WBISHOP_PNG));
-        board[0][3].put(new King(true,RESOURCES_WBISHOP_PNG));
-        whiteOccupiedSquares.add(board[0][2]);
-        whiteOccupiedSquares.add(board[0][5]);
-        whiteOccupiedSquares.add(board[0][3]);
+        board[0][6].put(new Amazon(true, RESOURCES_WKNIGHT_PNG));
+        board[0][7].put(new AprenticeRook(true, RESOURCES_WROOK_PNG));
+        for(int i=0; i<8;i++){
+            board[1][i].put(new Pawn2(true, RESOURCES_WPAWN_PNG));
+            whiteOccupiedSquares.add(board[0][i]);
+            whiteOccupiedSquares.add(board[1][i]);
+        }
+        board[7][0].put(new AprenticeRook(false, RESOURCES_BROOK_PNG));
+        board[7][1].put(new Telekenis(false, RESOURCES_BKNIGHT_PNG));
         board[7][2].put(new HopShop(false,RESOURCES_BBISHOP_PNG));
-        board[7][5].put(new HopShop(false,RESOURCES_BBISHOP_PNG));
-        board[0][3].put(new King(false,RESOURCES_BKING_PNG));
-        blackOccupiedSquares.add(board[7][2]);
-        blackOccupiedSquares.add(board[7][5]);
-        blackOccupiedSquares.add(board[7][3]);
+        board[7][3].put(new King(false,RESOURCES_BKING_PNG));
+        board[7][4].put(new CoolQueen(false, RESOURCES_BQUEEN_PNG));
+        board[7][5].put(new HopShop(false, RESOURCES_BBISHOP_PNG));
+        board[7][6].put(new Amazon(false, RESOURCES_BKNIGHT_PNG));
+        board[7][7].put(new AprenticeRook(false, RESOURCES_BROOK_PNG));
+        for(int i=0; i<8;i++){
+            board[6][i].put(new Pawn2(true, RESOURCES_BPAWN_PNG));
+            blackOccupiedSquares.add(board[6][i]);
+            blackOccupiedSquares.add(board[7][i]);
+        }        
     }
 
     public Square[][] getSquareArray() {
