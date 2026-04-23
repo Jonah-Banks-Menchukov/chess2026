@@ -140,8 +140,10 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         board[0][7].put(new AprenticeRook(true, RESOURCES_WROOK_PNG));
         for(int i=0; i<8;i++){
             board[1][i].put(new Pawn2(true, RESOURCES_WPAWN_PNG));
-            whiteOccupiedSquares.add(board[0][i]);
-            whiteOccupiedSquares.add(board[1][i]);
+            board[1][i].setDisplay(true);
+            whiteOccupiedSquares.add(board[i][1]);
+            board[1][i].setDisplay(true);
+            whiteOccupiedSquares.add(board[i][0]);
         }
         board[7][0].put(new AprenticeRook(false, RESOURCES_BROOK_PNG));
         board[7][1].put(new Telekenis(false, RESOURCES_BKNIGHT_PNG));
@@ -152,8 +154,10 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         board[7][6].put(new Amazon(false, RESOURCES_BKNIGHT_PNG));
         board[7][7].put(new AprenticeRook(false, RESOURCES_BROOK_PNG));
         for(int i=0; i<8;i++){
-            board[6][i].put(new Pawn2(true, RESOURCES_BPAWN_PNG));
+            board[i][6].put(new Pawn2(true, RESOURCES_BPAWN_PNG));
+            board[i][6].setDisplay(true);
             blackOccupiedSquares.add(board[6][i]);
+            board[i][7].setDisplay(true);
             blackOccupiedSquares.add(board[7][i]);
         }        
     }
@@ -228,45 +232,60 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         }
         if(fromMoveSquare!= null){
             if(currPiece!=null&&currPiece.getLegalMoves(this, fromMoveSquare).contains(endSquare)){
+                Piece temp=endSquare.getOccupyingPiece();
                 fromMoveSquare.setDisplay(false);
                 endSquare.put(currPiece);
                 endSquare.setDisplay(true);
                 fromMoveSquare.removePiece();
-                whiteTurn=!whiteTurn;
-                if(currPiece.getColor()){
-                    for(int i=0; i<whiteOccupiedSquares.size();i++){
-                        if(whiteOccupiedSquares.get(i).equals(fromMoveSquare)){
-                            whiteOccupiedSquares.remove(i);
-                        }
+                //check if move puts own king in check, if so undo the move and don't switch turns. If not, switch turns and update occupied squares.
+                if(isInCheck(whiteTurn)){
+                    fromMoveSquare.put(currPiece);
+                    fromMoveSquare.setDisplay(true);
+                    endSquare.removePiece();
+                    if(temp!=null){
+                        endSquare.put(temp);
+                        endSquare.setDisplay(true);
                     }
-                    if(endSquare.getOccupyingPiece()!=null){
-                        for(int i=0;i<blackOccupiedSquares.size();i++){
-                            if(blackOccupiedSquares.get(i).equals(endSquare)){
-                                blackOccupiedSquares.remove(i);
-                            }
-                        }
-                    }
-                    whiteOccupiedSquares.add(endSquare);
-                } else{
-                    for(int i=0; i<blackOccupiedSquares.size();i++){
-                        if(blackOccupiedSquares.get(i).equals(fromMoveSquare)){
-                            blackOccupiedSquares.remove(i);
-                        }
-                    }
-                    if(endSquare.getOccupyingPiece()!=null){
-                        for(int i=0;i<whiteOccupiedSquares.size();i++){
-                            if(whiteOccupiedSquares.get(i).equals(endSquare)){
+                }else{
+                    currPiece.takePiece();
+                    whiteTurn=!whiteTurn;
+                    if(currPiece.getColor()){
+                        for(int i=0; i<whiteOccupiedSquares.size();i++){
+                            if(whiteOccupiedSquares.get(i).equals(fromMoveSquare)){
                                 whiteOccupiedSquares.remove(i);
                             }
                         }
+                        if(endSquare.getOccupyingPiece()!=null){
+                            for(int i=0;i<blackOccupiedSquares.size();i++){
+                                if(blackOccupiedSquares.get(i).equals(endSquare)){
+                                    blackOccupiedSquares.remove(i);
+                                }
+                            }
+                        }
+                        whiteOccupiedSquares.add(endSquare);
+                    } else{
+                        for(int i=0; i<blackOccupiedSquares.size();i++){
+                            if(blackOccupiedSquares.get(i).equals(fromMoveSquare)){
+                                blackOccupiedSquares.remove(i);
+                            }
+                        }
+                        if(endSquare.getOccupyingPiece()!=null){
+                            for(int i=0;i<whiteOccupiedSquares.size();i++){
+                                if(whiteOccupiedSquares.get(i).equals(endSquare)){
+                                    whiteOccupiedSquares.remove(i);
+                                }
+                            }
+                        }
+                        blackOccupiedSquares.add(endSquare); 
                     }
-                    blackOccupiedSquares.add(endSquare); 
                 }
             }else{
                 fromMoveSquare.setDisplay(true);
                 fromMoveSquare.put(currPiece);
             }
         }
+        changePawns(whiteTurn);
+        changeIfThree(whiteTurn);
         currPiece = null;
         repaint();
     }
@@ -293,6 +312,45 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+    public void changePawns(boolean color){
+        if(color){
+            for(int i=0; i<8;i++){
+                Square s=board[7][i];
+                if(s.isOccupied()&&s.getOccupyingPiece().getColor()==color&& s.getOccupyingPiece() instanceof Pawn2){
+                    board[7][i].removePiece();
+                    board[7][i].put(new CoolQueen(true, RESOURCES_WQUEEN_PNG));
+                }
+            }
+        }else{
+            for(int i=0; i<8;i++){
+                Square s=board[0][i];
+                if(s.isOccupied()&&s.getOccupyingPiece().getColor()==color&& s.getOccupyingPiece() instanceof Pawn2){
+                    board[0][i].removePiece();
+                    board[0][i].put(new CoolQueen(false, RESOURCES_BQUEEN_PNG));
+                }
+            }
+    }
+    public void changeIfThree(boolean queenColor){
+        if(queenColor){
+            for(Square s:whiteOccupiedSquares){
+                if(s.isOccupied()&&s.getOccupyingPiece().getColor()==queenColor&& s.getOccupyingPiece() instanceof CoolQueen
+            &&s.getOccupyingPiece().getPiecesTaken()==3){
+                    board[s.getRow()][s.getCol()].removePiece();
+                    board[s.getRow()][s.getCol()].put(new Pawn2(true, RESOURCES_WPAWN_PNG));
+                    s.setDisplay(true);
+                }
+            }
+        }else{
+            for(Square s:blackOccupiedSquares){
+                if(s.isOccupied()&&s.getOccupyingPiece().getColor()==queenColor&& s.getOccupyingPiece() instanceof CoolQueen
+            &&s.getOccupyingPiece().getPiecesTaken()==3){
+                    board[s.getRow()][s.getCol()].removePiece();
+                    board[s.getRow()][s.getCol()].put(new Pawn2(false, RESOURCES_BPAWN_PNG));
+                    s.setDisplay(true);
+                }
+            }
+        }
     }
 
 }

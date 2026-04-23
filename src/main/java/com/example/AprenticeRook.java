@@ -16,8 +16,6 @@ public class AprenticeRook extends Piece {
     
     public AprenticeRook (boolean isWhite, String img_file) {
         super(isWhite,img_file);
-         
-        
     }
     
     

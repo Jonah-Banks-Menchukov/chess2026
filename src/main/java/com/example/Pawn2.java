@@ -1,7 +1,11 @@
-//Filip Milicevic
+//Jonah Banks
 //Pawn2
-//This specific pawn acts like pawns usually do but they can only eliminate other piece 2 diagonal instead of 1.
-
+/*This pawn can move backwards and forwards, and 
+can capture diagonally in all four directions. 
+It can become a queen if it reaches the end 
+of the board. It cannot move off the board, and it cannot move 
+into a square occupied by a piece of the same color. 
+*/
 package com.example;
 
 import java.awt.Graphics;
@@ -38,22 +42,27 @@ public class Pawn2 extends Piece {
     // Postcondition: Returns a list of all squares controlled by the piece from the
     // starting square.
     public ArrayList<Square> getControlledSquares(Square[][] board, Square start) {
-
         ArrayList<Square> controlled = new ArrayList<>();
         int row = start.getRow();
         int col = start.getCol();
-
-        if (this.getColor()) { // White Logic
-            // Controls ONLY the diagonal "jump" squares (row + 2, col +/- 2)
-            if (row + 2 < 8) {
-                if (col - 2 >= 0) controlled.add(board[row + 2][col - 2]);
-                if (col + 2 < 8)  controlled.add(board[row + 2][col + 2]);
-            }
-        } else { // Black Logic
-            // Controls ONLY the diagonal "jump" squares (row - 2, col +/- 2)
-            if (row - 2 >= 0) {
-                if (col - 2 >= 0) controlled.add(board[row - 2][col - 2]);
-                if (col + 2 < 8)  controlled.add(board[row - 2][col + 2]);
+        // Check all four diagonal directions for captures
+        if (row > 0 && col > 0) {
+            controlled.add(board[row - 1][col - 1]); // Diagonal up-left
+        }
+        if (row > 0 && col < 7) {
+            controlled.add(board[row - 1][col + 1]); // Diagonal up-right
+        }
+        if (row < 7 && col > 0) {
+            controlled.add(board[row + 1][col - 1]); // Diagonal down-left
+        }
+        if (row < 7 && col < 7) {
+            controlled.add(board[row + 1][col + 1]); // Diagonal down-right
+        }
+        //Remove any squares that are occupied by pieces of the same color
+        for (int i = controlled.size() - 1; i >= 0; i--) {
+            Square sq = controlled.get(i);
+            if (sq.isOccupied() && sq.getOccupyingPiece().getColor() == this.getColor()) {
+                controlled.remove(i);
             }
         }
         return controlled;
@@ -72,52 +81,20 @@ public class Pawn2 extends Piece {
     // Postcondition: A list of possible legal moves from the starting square is
     // returned.
     public ArrayList<Square> getLegalMoves(Board b, Square start) {
-        ArrayList<Square> moves = new ArrayList<>();
-        if (this.getColor() == true) {
-            if (start.getRow() < 7) {
-
-                Square up = b.getSquareArray()[start.getRow() + 1][start.getCol()];
-                moves.add(up);
-
-                // check diagonal left
-                if (start.getCol()-2 >= 0 && start.getRow()+2<8 && b.getSquareArray()[start.getRow() + 2][start.getCol() - 2].isOccupied()
-                        && b.getSquareArray()[start.getRow() + 2][start.getCol() - 2].getOccupyingPiece()
-                                .getColor() != this.getColor()) {
-                    Square downLeft = b.getSquareArray()[start.getRow() + 2][start.getCol() - 2];
-                    moves.add(downLeft);
-                }
-                // check diagonal right
-
-                if (start.getCol()+2<8 && start.getRow()+2 <8 && b.getSquareArray()[start.getRow() + 2][start.getCol() + 2].isOccupied()
-                        && b.getSquareArray()[start.getRow() + 2][start.getCol() + 2].getOccupyingPiece()
-                                .getColor() != this.getColor()) {
-                    Square downRight = b.getSquareArray()[start.getRow() + 2][start.getCol() + 2];
-                    moves.add(downRight);
-                }
-
+        ArrayList<Square> moves = new ArrayList<>(); 
+        Square[][] board = b.getSquareArray();
+        int row = start.getRow();
+        int col = start.getCol();
+        // Check forward move
+        if(row+1<8){
+            if(board[row+1][col].getOccupyingPiece()==null){
+                moves.add(board[row+1][col]);
             }
-        } else {
-            if (start.getRow() > 0) {
-                Square down = b.getSquareArray()[start.getRow() - 1][start.getCol()];
-                if (!down.isOccupied()) {
-                    moves.add(down);
-                }
-
-                // check diagonal left (moving DOWN and LEFT)
-                if (start.getCol() - 2 >= 0 && start.getRow() - 2 >= 0) {
-                    Square diagLeft = b.getSquareArray()[start.getRow() - 2][start.getCol() - 2];
-                    if (diagLeft.isOccupied() && diagLeft.getOccupyingPiece().getColor() != this.getColor()) {
-                        moves.add(diagLeft);
-                    }
-                }
-
-                // check diagonal right (moving DOWN and RIGHT)
-                if (start.getCol() + 2 < 8 && start.getRow() - 2 >= 0) {
-                    Square diagRight = b.getSquareArray()[start.getRow() - 2][start.getCol() + 2];
-                    if (diagRight.isOccupied() && diagRight.getOccupyingPiece().getColor() != this.getColor()) {
-                        moves.add(diagRight);
-                    }
-                }
+        }
+        // Check backward move
+        if(row-1>=0){
+            if(board[row-1][col].getOccupyingPiece()==null){
+                moves.add(board[row-1][col]);
             }
         }
         return moves;
