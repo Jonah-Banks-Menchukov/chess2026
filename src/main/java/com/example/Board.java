@@ -99,7 +99,8 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         whiteTurn = true;
 
     }
-    //precondition - the board is initialized and contains a king of either color. The boolean kingColor corresponds to the color of the king we wish to know the status of.
+    //precondition - the board is initialized and contains a king of either color. The boolean 
+    //kingColor corresponds to the color of the king we wish to know the status of.
     //postcondition - returns true of the king is in check and false otherwise.
 	public boolean isInCheck(boolean kingColor){
         if(kingColor){
@@ -331,6 +332,7 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
                 }
             }
     }
+}
     public void changeIfThree(boolean queenColor){
         if(queenColor){
             for(Square s:whiteOccupiedSquares){

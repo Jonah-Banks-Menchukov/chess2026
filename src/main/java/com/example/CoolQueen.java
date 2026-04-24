@@ -139,12 +139,12 @@ public class CoolQueen extends Piece {
         //check right
         for (int i = 1; i+start.getCol() <= 7; i++)
         {
-            Square rights = b.getSquareArray()[start.getRow()][start.getCol()+i];
-            if (rights.isOccupied())
+            Square right = b.getSquareArray()[start.getRow()][start.getCol()+i];
+            if (right.isOccupied())
             {
-                if (this.getColor() != rights.getOccupyingPiece().getColor())
+                if (this.getColor() != right.getOccupyingPiece().getColor())
                 {
-                    moves.add(rights);
+                    moves.add(right);
                 }
                 else
                 {
@@ -152,7 +152,7 @@ public class CoolQueen extends Piece {
                 }
                 break;
             } 
-            moves.add(rights);
+            moves.add(right);
 
         }
         //check left
