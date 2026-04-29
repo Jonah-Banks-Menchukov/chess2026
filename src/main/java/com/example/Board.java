@@ -65,7 +65,8 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         this.g = g;
         board = new Square[8][8];
         setLayout(new GridLayout(8, 8, 0, 0));
-
+        blackOccupiedSquares = new ArrayList<Square>();
+        whiteOccupiedSquares = new ArrayList<Square>();
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
@@ -104,18 +105,32 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     //postcondition - returns true of the king is in check and false otherwise.
 	public boolean isInCheck(boolean kingColor){
         if(kingColor){
+            //If the king is white, you want to check if any of the black pieces are 
+            // controlling the square the white king is on. If so, the white king is 
+            // in check and this returns true. If not, this returns false.
+            //YOU ARE ONLY LOOKING THROUGH THE BLACK PIECES, NOT EVERY SINGLE SQUARE 
+            //ON THE BOARD, THIS IS WHY YOU HAVE THE BLACK OCCUPIED SQUARES ARRAYLIST
             for(Square s:blackOccupiedSquares){
                 ArrayList<Square> controlledSqs=s.getOccupyingPiece().getControlledSquares(board, s);
                 for(Square c:controlledSqs){
-                    if(c.getOccupyingPiece()!=null&&c.getOccupyingPiece().getColor()!=kingColor&&c.getOccupyingPiece() instanceof King){
+                    //If any square is null or occupied by a piece of the same color, 
+                    // you can ignore it. If any square is occupied by an enemy king, 
+                    // you are in check and this returns true.
+                    if(c.getOccupyingPiece()!=null&&c.getOccupyingPiece().getColor()!=kingColor&&c. getOccupyingPiece() instanceof King){
                         return true;
                     }
                 }
             }
         }else{
+            //YOU ARE ONLY LOOKING THROUGH THE WHITE PIECES, NOT EVERY SINGLE SQUARE 
+            //ON THE BOARD, THIS IS WHY YOU HAVE THE WHITE OCCUPIED SQUARES ARRAYLIST
             for(Square s:whiteOccupiedSquares){
+                //s.getOccupyingPiece will never be null in theory.
                 ArrayList<Square> controlledSqs=s.getOccupyingPiece().getControlledSquares(board, s);
                 for(Square c:controlledSqs){
+                    //If any square is null or occupied by a piece of the same color, 
+                    // you can ignore it. If any square is occupied by an enemy king, 
+                    // you are in check and this returns true.
                     if(c.getOccupyingPiece()!=null&&c.getOccupyingPiece().getColor()!=kingColor&&c.getOccupyingPiece() instanceof King){
                         return true;
                     }
@@ -142,9 +157,9 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         for(int i=0; i<8;i++){
             board[1][i].put(new Pawn2(true, RESOURCES_WPAWN_PNG));
             board[1][i].setDisplay(true);
-            whiteOccupiedSquares.add(board[i][1]);
+            whiteOccupiedSquares.add(board[1][i]);
             board[1][i].setDisplay(true);
-            whiteOccupiedSquares.add(board[i][0]);
+            whiteOccupiedSquares.add(board[0][i]);
         }
         board[7][0].put(new AprenticeRook(false, RESOURCES_BROOK_PNG));
         board[7][1].put(new Telekenis(false, RESOURCES_BKNIGHT_PNG));
@@ -155,10 +170,10 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         board[7][6].put(new Amazon(false, RESOURCES_BKNIGHT_PNG));
         board[7][7].put(new AprenticeRook(false, RESOURCES_BROOK_PNG));
         for(int i=0; i<8;i++){
-            board[i][6].put(new Pawn2(true, RESOURCES_BPAWN_PNG));
-            board[i][6].setDisplay(true);
+            board[6][i].put(new Pawn2(true, RESOURCES_BPAWN_PNG));
+            board[6][i].setDisplay(true);
             blackOccupiedSquares.add(board[6][i]);
-            board[i][7].setDisplay(true);
+            board[7][i].setDisplay(true);
             blackOccupiedSquares.add(board[7][i]);
         }        
     }
@@ -238,7 +253,8 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
                 endSquare.put(currPiece);
                 endSquare.setDisplay(true);
                 fromMoveSquare.removePiece();
-                //check if move puts own king in check, if so undo the move and don't switch turns. If not, switch turns and update occupied squares.
+                //check if move puts own king in check, if so undo the move and don't switch 
+                // turns. If not, switch turns and update occupied squares.
                 if(isInCheck(whiteTurn)){
                     fromMoveSquare.put(currPiece);
                     fromMoveSquare.setDisplay(true);
